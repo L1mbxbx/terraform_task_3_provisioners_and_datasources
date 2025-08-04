@@ -1,7 +1,7 @@
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.prefix}-vm"
-  location              = azurerm_resource_group.example.location
-  resource_group_name   = azurerm_resource_group.example.name
+  location              = data.azurerm_resource_group.example.location
+  resource_group_name   = data.azurerm_resource_group.example.name
   network_interface_ids = [azurerm_network_interface.main.id]
   vm_size               = "Standard_DS1_v2"
 
@@ -38,7 +38,6 @@ resource "azurerm_virtual_machine" "main" {
   provisioner "file" {
     source      = "nginx.conf"
     destination = "/tmp/nginx.conf"
-
     connection {
       type     = "ssh"
       user     = "testadmin"
@@ -52,6 +51,7 @@ resource "azurerm_virtual_machine" "main" {
       "sudo apt-get update -y",
       "sudo apt-get install -y nginx",
       "sudo mv /tmp/nginx.conf /etc/nginx/nginx.conf",
+      "sudo mv /home/testadmin/index.html /var/www/html/index.html",
       "sudo systemctl restart nginx"
     ]
     connection {
