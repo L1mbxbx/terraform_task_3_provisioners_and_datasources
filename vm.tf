@@ -36,8 +36,8 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   provisioner "file" {
-    source      = "nginx.conf"
-    destination = "/tmp/nginx.conf"
+    source      = "index.html"
+    destination = "/tmp/index.html"
     connection {
       type     = "ssh"
       user     = "testadmin"
@@ -50,8 +50,7 @@ resource "azurerm_virtual_machine" "main" {
     inline = [
       "sudo apt-get update -y",
       "sudo apt-get install -y nginx",
-      "sudo mv /tmp/nginx.conf /etc/nginx/nginx.conf",
-      "sudo mv /home/testadmin/index.html /var/www/html/index.html",
+      "sudo cp /tmp/index.html /var/www/html/index.html",
       "sudo systemctl restart nginx"
     ]
     connection {
